@@ -22,10 +22,7 @@ spec:
           name: mysqlport
         env:
         - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: mysql-root-password
-              name: mysql-root-password-secret
+          value: guilin
       hostname: mysql
       nodeSelector:
         env: test
