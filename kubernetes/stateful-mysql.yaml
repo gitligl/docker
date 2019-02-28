@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stateful-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: d-mysql-svc
+  template:
+    metadata:
+      name: mysql-server
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+          name: mysqlport
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: guilin
+      hostname: mysql
+      nodeSelector:
+        env: test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: d-mysql-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: mysqlport

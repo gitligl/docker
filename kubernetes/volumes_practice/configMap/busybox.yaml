@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: lglns
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.28
+    volumeMounts:
+      - name: time
+        mountPath: /etc/localtime
+        readOnly: true
+      - name: gitconfig
+        mountPath: "/home/.git"
+        readOnly: true
+    command:
+    - /bin/sh
+    - -c
+    - sleep 1000000
+  hostname: busybox
+  volumes:
+  - hostPath:
+      path: /etc/localtime
+    name: time
+  - name: gitconfig
+    configMap:
+      name: git
+      items:
+      - key: config
+        path: config
