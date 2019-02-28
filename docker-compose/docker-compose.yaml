@@ -1,0 +1,69 @@
+version: '3'
+services:
+  minio1:
+    image: minio/minio
+    volumes:
+      - /data/data1:/data
+      - /etc/localtime:/etc/localtime
+    restart: always
+    container_name: minio1
+    hostname: minio1
+    environment:
+      MINIO_ACCESS_KEY: ligl
+      MINIO_SECRET_KEY: liguilin
+    ports:
+      - "8001:9000"
+    networks:
+      - minio
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data 
+  minio2:
+    image: minio/minio
+    volumes:
+      - /data/data2:/data
+      - /etc/localtime:/etc/localtime
+    restart: always
+    container_name: minio2
+    hostname: minio2
+    environment:
+      MINIO_ACCESS_KEY: ligl
+      MINIO_SECRET_KEY: liguilin
+    ports:
+      - "8002:9000"
+    networks:
+      - minio
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data 
+  minio3:
+    image: minio/minio
+    volumes:
+      - /data/data3:/data
+      - /etc/localtime:/etc/localtime
+    restart: always
+    container_name: minio3
+    hostname: minio3
+    environment:
+      MINIO_ACCESS_KEY: ligl
+      MINIO_SECRET_KEY: liguilin
+    ports:
+      - "8003:9000"
+    networks:
+      - minio
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data 
+  minio4:
+    image: minio/minio
+    volumes:
+      - /data/data4:/data
+      - /etc/localtime:/etc/localtime
+    restart: always
+    container_name: minio4
+    hostname: minio4
+    environment:
+      MINIO_ACCESS_KEY: ligl
+      MINIO_SECRET_KEY: liguilin
+    ports:
+      - "8004:9000"
+    networks:
+      - minio
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data 
+networks:
+  minio:
+    driver: bridge
