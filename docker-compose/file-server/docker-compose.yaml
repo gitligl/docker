@@ -1,0 +1,46 @@
+#搭建自己的文件服务器，该文件服务器依赖于镜像phenix:1.0，该镜像是自行构建的，可通过Dockerfile构建，且该镜像已上传至dockerligl/phenix:1.0
+version: '3'
+services:
+  file-db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "wareservice"
+    container_name: "file-db"
+    hostname: "file-db"
+    ports:
+      - "23306:3306"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./mysql/data/:/var/lib/mysql/"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+  file-minio:
+    image: minio/minio:master
+    environment:
+      MINIO_ACCESS_KEY: "minioname"
+      MINIO_SECRET_KEY: "miniopassword"
+    container_name: "file-minio"
+    hostname: "file-minio"
+    ports:
+      - "29000:9000"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./minio/data/:/data/"
+      - "./minio/config/:/root/.minio"
+    command: server /data
+    restart: always
+  file-phenix:
+    image: phenix:1.0
+    depends_on:
+      - file-db
+      - file-minio
+    container_name: "file-phenix"
+    hostname: "file-phenin"
+    ports:
+      - "22228:2228"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./phenix/app.yml:/phenix/conf/app.yml"
+      - "./phenix/source/:/phenix/source/"
+    restart: always

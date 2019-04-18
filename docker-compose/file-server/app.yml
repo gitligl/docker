@@ -1,0 +1,8 @@
+app:
+  name: phenix
+  port: 2228
+  basepath: /phenix/source
+  serverurl: 192.168.101.12:19000
+  accesskey: esg@retech
+  secrekey: password@esg
+  dbserver: root:admin@esg@tcp(192.168.101.12:13306)/yeke?charset=utf8
