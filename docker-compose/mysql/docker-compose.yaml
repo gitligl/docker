@@ -1,0 +1,48 @@
+version: '3'
+services:
+  db-master:
+    image: mysql:5.6
+    container_name: db-master
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /etc/timezone:/etc/timezone:ro
+    - ./master/data/:/var/lib/mysql
+    - ./master/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    ports:
+    - 23306:3306
+    environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    networks:
+    - mysql
+  db-slave:
+    image: mysql:5.6
+    container_name: db-slave
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /etc/timezone:/etc/timezone:ro
+    - ./slave/data/:/var/lib/mysql
+    - ./slave/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    ports:
+    - 33306:3306
+    environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    networks:
+    - mysql
+  db-proxy:
+    image: esghk/gaea:1.2
+    container_name: db-proxy
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /etc/timezone:/etc/timezone:ro
+    - ./etc/:/gaea/etc/
+    ports:
+    - 13307:13307
+    - 13308:13306
+    depends_on:
+    - db-master
+    - db-slave
+    networks:
+    - mysql
+networks:
+  mysql:
+    external: true
